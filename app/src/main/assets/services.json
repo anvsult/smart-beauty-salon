@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Haircut",
+    "description": "Classic haircut with wash and styling.",
+    "price": 25.0,
+    "duration": 30,
+    "imageUrl": "haircut"
+  },
+  {
+    "name": "Facial Treatment",
+    "description": "Deep cleansing and hydration facial treatment for all skin types.",
+    "price": 40.0,
+    "duration": 45,
+    "imageUrl": "facial"
+  },
+  {
+    "name": "Manicure",
+    "description": "Nail trimming, shaping, cuticle care, and polish.",
+    "price": 20.0,
+    "duration": 30,
+    "imageUrl": "manicure"
+  },
+  {
+    "name": "Hair Coloring",
+    "description": "Full-head hair coloring using premium products.",
+    "price": 60.0,
+    "duration": 90,
+    "imageUrl": "haircolor"
+  },
+  {
+    "name": "Massage Therapy",
+    "description": "Relaxing full-body massage with aromatic oils.",
+    "price": 50.0,
+    "duration": 60,
+    "imageUrl": "massage"
+  }
+]
