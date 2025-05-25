@@ -33,9 +33,10 @@ object AppModule {
     @Provides
     @Singleton
     fun providePopulateDbCallback(
+        @ApplicationContext context: Context,
         scope: CoroutineScope
     ): AppDatabase.Companion.PopulateDbCallback {
-        return AppDatabase.Companion.PopulateDbCallback(scope)
+        return AppDatabase.Companion.PopulateDbCallback(context, scope)
     }
 
     @Provides

@@ -25,20 +25,14 @@ import smartbeautysalontest.ui.screens.owner.SalonManageServicesScreen
 import smartbeautysalontest.ui.screens.owner.SalonOwnerDashboardScreen
 import java.util.UUID
 
-// Sealed class for screen routes
 sealed class Screen(val route: String) {
     object RoleSelection : Screen("role_selection")
     object CustomerHome : Screen("customer_home")
     object ServiceCatalog : Screen("service_catalog")
 
-    // If serviceId is UUID
     object BookAppointment : Screen("book_appointment/{serviceId}") {
         fun createRoute(serviceId: UUID) = "book_appointment/$serviceId"
     }
-    // If serviceId is Long
-    // object BookAppointment : Screen("book_appointment/{serviceId}") {
-    //    fun createRoute(serviceId: Long) = "book_appointment/$serviceId"
-    // }
 
     object CustomerAppointments : Screen("customer_appointments")
     object CustomerPreferences : Screen("customer_preferences")
@@ -46,16 +40,10 @@ sealed class Screen(val route: String) {
     object ManageAppointments : Screen("manage_appointments")
     object ManageServices : Screen("manage_services")
 
-    // If serviceId is UUID
     object AddEditService : Screen("add_edit_service?serviceId={serviceId}") {
         fun createRoute(serviceId: UUID? = null) =
             if (serviceId != null) "add_edit_service?serviceId=$serviceId" else "add_edit_service"
     }
-    // If serviceId is Long
-    // object AddEditService : Screen("add_edit_service?serviceId={serviceId}") {
-    //    fun createRoute(serviceId: Long? = null) =
-    //        if (serviceId != null) "add_edit_service?serviceId=$serviceId" else "add_edit_service"
-    // }
 }
 
 
