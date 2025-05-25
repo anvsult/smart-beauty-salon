@@ -94,7 +94,7 @@ fun BookAppointmentScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Book Appointment") },
+                title = { Text("Book Appointment", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -118,17 +118,17 @@ fun BookAppointmentScreen(
         ) {
             service?.let { s ->
                 Text("Booking: ${s.name}", style = MaterialTheme.typography.headlineSmall)
-                Text("Description: ${s.description}", style = MaterialTheme.typography.bodyLarge)
+                Text("Description: ${s.description}", style = MaterialTheme.typography.bodyMedium)
                 Text(
                     "Price: ${currencyFormat.format(s.price)}",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary)
                 )
                 Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                 // Date Picker
                 OutlinedTextField(
                     value = dateFormat.format(selectedDate.time),
-                    onValueChange = { /* Read-only, changed by dialog */ },
+                    onValueChange = {  },
                     label = { Text("Appointment Date") },
                     readOnly = true,
                     trailingIcon = {
@@ -164,32 +164,29 @@ fun BookAppointmentScreen(
                 Button(
                     onClick = {
                         val appointmentDateTime = Calendar.getInstance().apply {
-                            set(Calendar.YEAR, selectedDate.get(Calendar.YEAR))
-                            set(Calendar.MONTH, selectedDate.get(Calendar.MONTH))
-                            set(Calendar.DAY_OF_MONTH, selectedDate.get(Calendar.DAY_OF_MONTH))
+                            timeInMillis = selectedDate.timeInMillis
                             set(Calendar.HOUR_OF_DAY, selectedTime.get(Calendar.HOUR_OF_DAY))
                             set(Calendar.MINUTE, selectedTime.get(Calendar.MINUTE))
                             set(Calendar.SECOND, 0)
                             set(Calendar.MILLISECOND, 0)
                         }
 
-                        // Basic validation: Ensure appointment is in the future
                         if (appointmentDateTime.timeInMillis <= System.currentTimeMillis()) {
                             showErrorMessage = "Please select a future date and time."
                             return@Button
                         }
-                        showErrorMessage = null
 
                         coroutineScope.launch {
                             customerViewModel.bookAppointment(s.id, appointmentDateTime.timeInMillis, notes)
                                 .collect { bookingId ->
-                                    if (bookingId != null && bookingId > 0) {
-                                        showSuccessMessage = true
-                                    } else if (bookingId == null) {
-                                        // Still processing or initial state, do nothing yet
-                                    }
-                                    else {
-                                        showErrorMessage = "Booking failed. Please try again."
+                                    when {
+                                        bookingId != null && bookingId > 0 -> {
+                                            Toast.makeText(context, "Appointment booked successfully!", Toast.LENGTH_LONG).show()
+                                            navController.popBackStack(Screen.CustomerHome.route, false)
+                                        }
+                                        bookingId?.toInt() == 0 -> {
+                                            showErrorMessage = "Booking failed. Please try again."
+                                        }
                                     }
                                 }
                         }

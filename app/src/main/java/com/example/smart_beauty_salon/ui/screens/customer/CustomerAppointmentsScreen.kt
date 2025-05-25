@@ -30,7 +30,6 @@ fun CustomerAppointmentsScreen(
     sharedViewModel: SharedViewModel
 ) {
     val appointments by customerViewModel.customerAppointments.collectAsStateWithLifecycle()
-    // We need all services to look up names by ID
     val allServices by sharedViewModel.allServices.collectAsStateWithLifecycle()
     val servicesMap = remember(allServices) { allServices.associateBy { it.id } }
 
@@ -43,16 +42,18 @@ fun CustomerAppointmentsScreen(
             title = { Text("Cancel Appointment") },
             text = { Text("Are you sure you want to cancel this appointment?") },
             confirmButton = {
-                Button(
-                    onClick = {
-                        appointmentToCancel?.let { customerViewModel.cancelAppointment(it) }
-                        showDialog = false
-                        appointmentToCancel = null
-                    }
-                ) { Text("Yes, Cancel") }
+                Button(onClick = {
+                    appointmentToCancel?.let { customerViewModel.cancelAppointment(it) }
+                    showDialog = false
+                    appointmentToCancel = null
+                }) {
+                    Text("Yes, Cancel")
+                }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false }) { Text("No") }
+                OutlinedButton(onClick = { showDialog = false }) {
+                    Text("No")
+                }
             }
         )
     }
@@ -60,32 +61,38 @@ fun CustomerAppointmentsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Appointments") },
+                title = { Text("My Appointments", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
     ) { paddingValues ->
         if (appointments.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                Text("You have no upcoming appointments.")
+                Text(
+                    "You have no upcoming appointments.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp),
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(appointments) { appointment ->
@@ -115,42 +122,53 @@ fun AppointmentItemCard(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = service?.name ?: "Service ID: ${appointment.serviceId}",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Date: ${dateFormat.format(Date(appointment.appointmentDateTime))}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                if (appointment.customerNotes.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Notes: ${appointment.customerNotes}",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                service?.price?.let {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Price: ${NumberFormat.getCurrencyInstance(Locale.getDefault()).format(it)}",
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                if (showCancelButton) {
+                    IconButton(onClick = onCancelClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Cancel Appointment",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
-            if (showCancelButton) {
-                IconButton(onClick = onCancelClick) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Cancel Appointment", tint = MaterialTheme.colorScheme.error)
-                }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Date: ${dateFormat.format(Date(appointment.appointmentDateTime))}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            if (appointment.customerNotes.isNotBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Notes: ${appointment.customerNotes}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            service?.price?.let {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Price: ${
+                        NumberFormat.getCurrencyInstance(Locale.getDefault()).format(it)
+                    }",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }

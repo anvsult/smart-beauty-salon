@@ -47,7 +47,7 @@ fun SalonManageAppointmentsScreen(
                 ) { Text("Yes, Delete") }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false }) { Text("No") }
+                OutlinedButton(onClick = { showDialog = false }) { Text("Cancel") }
             }
         )
     }
@@ -55,7 +55,7 @@ fun SalonManageAppointmentsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Manage All Appointments") },
+                title = { Text("Manage Appointments") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -67,33 +67,34 @@ fun SalonManageAppointmentsScreen(
                 )
             )
         }
-    ) { paddingValues ->
+    ) { padding ->
         if (appointments.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No appointments booked yet.")
+                Text("No appointments booked.")
             }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(padding)
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(appointments) { appointment ->
                     val service = servicesMap[appointment.serviceId]
-                    // Re-using AppointmentItemCard, but the "cancel" button acts as "delete" for owner
                     AppointmentItemCard(
                         appointment = appointment,
                         service = service,
-                        onCancelClick = { // Semantically "delete" for owner
+                        onCancelClick = {
                             appointmentToDelete = appointment
                             showDialog = true
                         },
-                        showCancelButton = true // Owner can delete
+                        showCancelButton = true
                     )
                 }
             }

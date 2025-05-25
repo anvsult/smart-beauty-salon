@@ -3,6 +3,7 @@ package smartbeautysalontest.ui.screens.owner
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -39,7 +40,7 @@ fun SalonManageServicesScreen(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text("Delete Service") },
-            text = { Text("Are you sure you want to delete '${serviceToDelete?.name}'? This will also remove it from any future bookings.") },
+            text = { Text("Delete '${serviceToDelete?.name}'? This will remove it from all future bookings.") },
             confirmButton = {
                 Button(
                     onClick = {
@@ -50,7 +51,7 @@ fun SalonManageServicesScreen(
                 ) { Text("Yes, Delete") }
             },
             dismissButton = {
-                Button(onClick = { showDeleteDialog = false }) { Text("No") }
+                OutlinedButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
             }
         )
     }
@@ -74,28 +75,30 @@ fun SalonManageServicesScreen(
             FloatingActionButton(onClick = {
                 navController.navigate(Screen.AddEditService.createRoute(null))
             }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add New Service")
+                Icon(Icons.Filled.Add, contentDescription = "Add Service")
             }
         }
-    ) { paddingValues ->
+    ) { padding ->
         if (services.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("No services configured yet.")
+                    Text("No services added.")
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Click the '+' button to add a new service.")
+                    Text("Tap '+' to add a new service.")
                 }
             }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(padding)
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(services) { service ->
                     SalonServiceItem(
@@ -124,25 +127,34 @@ fun SalonServiceItem(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = service.name, style = MaterialTheme.typography.titleMedium)
-                Text(text = service.description, style = MaterialTheme.typography.bodySmall, maxLines = 2)
-                Text(
-                    text = "Price: ${currencyFormat.format(service.price)}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Text(service.name, style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(service.description, style = MaterialTheme.typography.bodySmall, maxLines = 2)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Price: ${currencyFormat.format(service.price)}", style = MaterialTheme.typography.bodyMedium)
             }
-            IconButton(onClick = onEditClick) {
-                Icon(Icons.Filled.Edit, contentDescription = "Edit Service")
-            }
-            IconButton(onClick = onDeleteClick) {
-                Icon(Icons.Filled.Delete, contentDescription = "Delete Service", tint = MaterialTheme.colorScheme.error)
+            Column {
+                IconButton(onClick = onEditClick) {
+                    Icon(Icons.Filled.Edit, contentDescription = "Edit")
+                }
+                IconButton(onClick = onDeleteClick) {
+                    Icon(
+                        Icons.Filled.Delete,
+                        contentDescription = "Delete",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     }

@@ -29,7 +29,7 @@ fun CustomerPreferencesScreen(
     var skinType by remember { mutableStateOf("") }
     var preferredStylist by remember { mutableStateOf("") }
 
-    // Update local state when preferences are loaded or changed
+    // Sync UI state with ViewModel
     LaunchedEffect(preferences) {
         preferences?.let {
             hairType = it.hairType
@@ -41,15 +41,15 @@ fun CustomerPreferencesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Preferences") },
+                title = { Text("My Preferences", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -58,35 +58,42 @@ fun CustomerPreferencesScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                "Set your preferences to help us tailor your experience.",
-                style = MaterialTheme.typography.bodyLarge
+                text = "Tailor your experience by setting your beauty preferences.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             OutlinedTextField(
                 value = hairType,
                 onValueChange = { hairType = it },
-                label = { Text("Hair Type (e.g., Oily, Dry, Curly)") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Hair Type") },
+                placeholder = { Text("e.g., Oily, Dry, Curly") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
 
             OutlinedTextField(
                 value = skinType,
                 onValueChange = { skinType = it },
-                label = { Text("Skin Type (e.g., Sensitive, Combination)") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Skin Type") },
+                placeholder = { Text("e.g., Sensitive, Combination") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
 
             OutlinedTextField(
                 value = preferredStylist,
                 onValueChange = { preferredStylist = it },
                 label = { Text("Preferred Stylist (Optional)") },
-                modifier = Modifier.fillMaxWidth()
+                placeholder = { Text("e.g., Lisa, Andre") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
 
             Button(
@@ -95,7 +102,8 @@ fun CustomerPreferencesScreen(
                     Toast.makeText(context, "Preferences saved!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
             ) {
                 Text("Save Preferences")
             }

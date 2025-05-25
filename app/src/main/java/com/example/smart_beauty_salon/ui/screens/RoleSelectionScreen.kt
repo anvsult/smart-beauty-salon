@@ -1,17 +1,12 @@
 package com.example.smartbeautysalontest.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.smart_beauty_salon.ui.navigation.Screen
 
@@ -21,10 +16,15 @@ fun RoleSelectionScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Select Your Role") },
+                title = {
+                    Text(
+                        text = "Choose Your Role",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -33,25 +33,43 @@ fun RoleSelectionScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Welcome to Smart Beauty Salon!", style = MaterialTheme.typography.headlineSmall)
-            Spacer(modifier = Modifier.height(32.dp))
-
+            Text(
+                text = "Welcome to SmartBeauty",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+            Text(
+                text = "Please select your role to continue.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(40.dp))
             Button(
                 onClick = { navController.navigate(Screen.CustomerHome.route) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = MaterialTheme.shapes.medium
             ) {
-                Text("I am a Customer")
+                Text("I am a Customer", fontSize = 16.sp)
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = { navController.navigate(Screen.SalonOwnerHome.route) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             ) {
-                Text("I am a Salon Owner")
+                Text("I am a Salon Owner", fontSize = 16.sp)
             }
         }
     }

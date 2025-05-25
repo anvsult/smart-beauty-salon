@@ -25,7 +25,7 @@ import java.util.UUID
 @Composable
 fun AddEditServiceScreen(
     navController: NavController,
-    serviceId: UUID?, // Null if adding new service
+    serviceId: UUID?,
     salonOwnerViewModel: SalonOwnerViewModel,
     sharedViewModel: SharedViewModel
 ) {
@@ -36,14 +36,13 @@ fun AddEditServiceScreen(
     var serviceName by remember { mutableStateOf("") }
     var serviceDescription by remember { mutableStateOf("") }
     var servicePriceString by remember { mutableStateOf("") }
-    var serviceDuration by remember { mutableStateOf(30) } // Default duration, can be changed later
+    var serviceDuration by remember { mutableStateOf(30) }
 
     var nameError by remember { mutableStateOf<String?>(null) }
     var descriptionError by remember { mutableStateOf<String?>(null) }
     var priceError by remember { mutableStateOf<String?>(null) }
     var durationError by remember { mutableStateOf<String?>(null) }
 
-    // Load service details if editing
     if (isEditing && serviceId != null) {
         val serviceToEdit by sharedViewModel.getServiceById(serviceId).collectAsStateWithLifecycle(initialValue = null)
         LaunchedEffect(serviceToEdit) {
@@ -71,7 +70,6 @@ fun AddEditServiceScreen(
         return isValid
     }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -87,51 +85,50 @@ fun AddEditServiceScreen(
                 )
             )
         }
-    ) { paddingValues ->
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp)
+                .padding(padding)
+                .padding(24.dp)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             OutlinedTextField(
                 value = serviceName,
                 onValueChange = { serviceName = it; nameError = null },
                 label = { Text("Service Name") },
-                modifier = Modifier.fillMaxWidth(),
                 isError = nameError != null,
+                modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            if (nameError != null) {
-                Text(text = nameError!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+            nameError?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
 
             OutlinedTextField(
                 value = serviceDescription,
                 onValueChange = { serviceDescription = it; descriptionError = null },
-                label = { Text("Service Description") },
-                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Description") },
                 isError = descriptionError != null,
-                maxLines = 3
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 4
             )
-            if (descriptionError != null) {
-                Text(text = descriptionError!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+            descriptionError?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
 
             OutlinedTextField(
                 value = servicePriceString,
                 onValueChange = { servicePriceString = it; priceError = null },
-                label = { Text("Service Price") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = { Text("Price") },
                 isError = priceError != null,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            if (priceError != null) {
-                Text(text = priceError!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+            priceError?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
 
             OutlinedTextField(
@@ -140,26 +137,20 @@ fun AddEditServiceScreen(
                     serviceDuration = it.toIntOrNull() ?: 0
                     durationError = null
                 },
-                label = { Text("Service Duration (minutes)") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = { Text("Duration (minutes)") },
                 isError = durationError != null,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            if (durationError != null) {
-                Text(
-                    text = durationError!!,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
+            durationError?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
                     if (validateFields()) {
-                        val price = servicePriceString.toDouble() // Already validated
+                        val price = servicePriceString.toDouble()
                         if (isEditing && serviceId != null) {
                             salonOwnerViewModel.updateService(
                                 Service(

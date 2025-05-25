@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.smart_beauty_salon.data.model.Service
 import com.example.smart_beauty_salon.ui.navigation.Screen
@@ -31,33 +32,43 @@ fun ServiceCatalogScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Available Services") },
+                title = {
+                    Text(
+                        text = "Our Services",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
     ) { paddingValues ->
         if (services.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No services available at the moment.")
+                Text(
+                    text = "No services available.",
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(services) { service ->
                     ServiceCatalogItem(
@@ -81,20 +92,34 @@ fun ServiceCatalogItem(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        shape = MaterialTheme.shapes.extraLarge,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = service.name, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = service.description, style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Text(
-                text = "Price: ${currencyFormat.format(service.price)}",
-                style = MaterialTheme.typography.bodySmall
+                text = service.name,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = service.description,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = currencyFormat.format(service.price),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
             Button(
                 onClick = onBookClick,
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text("Book Now")

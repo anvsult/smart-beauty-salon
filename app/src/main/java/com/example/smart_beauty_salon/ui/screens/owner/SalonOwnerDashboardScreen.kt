@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.smart_beauty_salon.ui.navigation.Screen
 import com.example.smart_beauty_salon.ui.viewmodels.SalonOwnerViewModel
@@ -15,16 +16,21 @@ import com.example.smart_beauty_salon.ui.viewmodels.SharedViewModel
 @Composable
 fun SalonOwnerDashboardScreen(
     navController: NavController,
-    salonOwnerViewModel: SalonOwnerViewModel, // May not be used directly here, but good to have
-    sharedViewModel: SharedViewModel // May not be used directly here
+    salonOwnerViewModel: SalonOwnerViewModel,
+    sharedViewModel: SharedViewModel
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Salon Owner Dashboard") },
+                title = {
+                    Text(
+                        text = "Salon Dashboard",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -33,39 +39,66 @@ fun SalonOwnerDashboardScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text("Manage Your Salon", style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = "Welcome, Salon Owner",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Text(
+                text = "Manage your services and appointments with ease.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
                 onClick = { navController.navigate(Screen.ManageAppointments.route) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = MaterialTheme.shapes.medium
             ) {
-                Text("Manage Appointments")
+                Text("Manage Appointments", fontSize = 16.sp)
             }
+
             Button(
                 onClick = { navController.navigate(Screen.ManageServices.route) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             ) {
-                Text("Manage Services")
+                Text("Manage Services", fontSize = 16.sp)
             }
-            // You might add other owner-specific features here, like viewing analytics (future)
 
-            Spacer(modifier = Modifier.weight(1f)) // Pushes button to bottom
+            Spacer(modifier = Modifier.weight(1f))
 
-            Button(
+            OutlinedButton(
                 onClick = {
                     navController.navigate(Screen.RoleSelection.route) {
                         popUpTo(Screen.RoleSelection.route) { inclusive = true }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = MaterialTheme.shapes.medium
             ) {
-                Text("Change Role / Logout")
+                Text("Change Role / Logout", fontSize = 14.sp)
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
