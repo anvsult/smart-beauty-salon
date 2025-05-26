@@ -44,8 +44,8 @@ fun BookAppointmentScreen(
     val currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
     val coroutineScope = rememberCoroutineScope()
 
-    var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
-    var selectedTime by remember { mutableStateOf(Calendar.getInstance()) }
+    val selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
+    val selectedTime by remember { mutableStateOf(Calendar.getInstance()) }
     var notes by remember { mutableStateOf("") }
     var showSuccessMessage by remember { mutableStateOf(false) }
     var showErrorMessage by remember { mutableStateOf<String?>(null) }
@@ -55,6 +55,9 @@ fun BookAppointmentScreen(
 
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
+
+    var formattedTime by remember { mutableStateOf(timeFormat.format(selectedTime.time)) }
+    var formattedDate by remember { mutableStateOf(dateFormat.format(selectedDate.time)) }
 
     MaterialDialog(
         dialogState = dateDialogState,
@@ -70,6 +73,7 @@ fun BookAppointmentScreen(
             selectedDate.set(Calendar.YEAR, date.year)
             selectedDate.set(Calendar.MONTH, date.monthValue - 1)
             selectedDate.set(Calendar.DAY_OF_MONTH, date.dayOfMonth)
+            formattedDate = dateFormat.format(selectedDate.time)
         }
     }
 
@@ -83,10 +87,11 @@ fun BookAppointmentScreen(
         timepicker(
             initialTime = selectedTime.toInstant().atZone(selectedTime.timeZone.toZoneId()).toLocalTime(),
             title = "Pick a time",
-            is24HourClock = false
+            is24HourClock = true
         ) { time ->
             selectedTime.set(Calendar.HOUR_OF_DAY, time.hour)
             selectedTime.set(Calendar.MINUTE, time.minute)
+            formattedTime = timeFormat.format(selectedTime.time)
         }
     }
 
@@ -123,11 +128,11 @@ fun BookAppointmentScreen(
                     "Price: ${currencyFormat.format(s.price)}",
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary)
                 )
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                 // Date Picker
                 OutlinedTextField(
-                    value = dateFormat.format(selectedDate.time),
+                    value = formattedDate,
                     onValueChange = {  },
                     label = { Text("Appointment Date") },
                     readOnly = true,
@@ -141,7 +146,7 @@ fun BookAppointmentScreen(
 
                 // Time Picker
                 OutlinedTextField(
-                    value = timeFormat.format(selectedTime.time),
+                    value = formattedTime,
                     onValueChange = { /* Read-only, changed by dialog */ },
                     label = { Text("Appointment Time") },
                     readOnly = true,

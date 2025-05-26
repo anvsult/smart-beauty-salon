@@ -17,4 +17,4 @@ Features
 6. Local Data Storage – All data is stored on the device using Room Database.
    Target Users
     Customers looking for a simple way to book beauty salon services.
-    Beauty salon owners managing appointments e􀆯iciently without cloud integration.
+    Beauty salon owners managing appointments efficiently without cloud integration.
