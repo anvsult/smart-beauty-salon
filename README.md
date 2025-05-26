@@ -39,3 +39,35 @@ SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose*
 
 - UI tested manually with various booking scenarios.
 - Handles invalid input and edge cases (e.g., past dates, missing notes).
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Android Studio Giraffe or later
+- Kotlin 1.9+
+- Android SDK 33+
+
+### Run Locally
+
+1. **Clone this repository:**
+
+   ```bash
+   git clone https://github.com/your-username/smartbeauty.git
+   cd smartbeauty
+   
+2. **Open with Android Studio and let Gradle sync.**
+
+3. **Run the app on an emulator or physical device.**
+
+---
+
+📁 Project Structure
+
+com.smart-beauty-salon
+├── data         # Room entities, DAOs, and database
+├── ui           # Compose screens and navigation
+├── di           # Handle dependency injection with Hilt
+├── repository   # Data repositories for service, appointment, and customer preferences
+├── MainActivity # Single-activity entry point
