@@ -50,7 +50,7 @@ SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose*
 1. **Clone this repository:**
 
    ```bash
-   git clone https://github.com/your-username/smartbeauty.git
+   git clone https://github.com/anvsult/smart-beauty-salon.git
    cd smartbeauty
    ```
 2. **Open with Android Studio and let Gradle sync.**
