@@ -21,6 +21,9 @@ SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose*
 - Uses **Room Database** for persistent offline storage.
 - MVVM architecture with a single-activity, composable navigation flow.
 
+## 📷 Video Showcase
+
+### https://github.com/user-attachments/assets/95ed67b7-ec9f-42d2-8672-0cad1a14e6dd
 
 ## 🛠️ Built With
 
