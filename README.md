@@ -2,7 +2,6 @@
 
 SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose**, designed to streamline beauty salon management and appointment booking. It offers two roles: **Customers** can browse services and book appointments, while **Salon Owners** can manage services, bookings, and client preferences.
 
----
 
 ## ✨ Features
 
@@ -22,7 +21,6 @@ SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose*
 - Uses **Room Database** for persistent offline storage.
 - MVVM architecture with a single-activity, composable navigation flow.
 
----
 
 ## 🛠️ Built With
 
@@ -33,14 +31,12 @@ SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose*
 - **ViewModel & LiveData** – State management
 - **Kotlin Coroutines** – Asynchronous booking workflows
 
----
 
 ## 🧪 Testing
 
 - UI tested manually with various booking scenarios.
 - Handles invalid input and edge cases (e.g., past dates, missing notes).
 
----
 
 ## 🚀 Getting Started
 
@@ -56,18 +52,7 @@ SmartBeauty is a modern, user-friendly Android app built with **Jetpack Compose*
    ```bash
    git clone https://github.com/your-username/smartbeauty.git
    cd smartbeauty
-   
+   ```
 2. **Open with Android Studio and let Gradle sync.**
 
 3. **Run the app on an emulator or physical device.**
-
----
-
-📁 Project Structure
-
-com.smart-beauty-salon
-├── data         # Room entities, DAOs, and database
-├── ui           # Compose screens and navigation
-├── di           # Handle dependency injection with Hilt
-├── repository   # Data repositories for service, appointment, and customer preferences
-├── MainActivity # Single-activity entry point
